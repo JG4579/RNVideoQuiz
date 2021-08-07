@@ -2,13 +2,13 @@
  * Video Test
  */
 
-import React, {useState} from 'react';
+import React, {Component, useState} from 'react';
+import Video from 'react-native-video';
 import {
   SafeAreaView,
   StyleSheet,
   Text,
   View,
-  Image,
   Button
 } from 'react-native';
 
@@ -27,8 +27,7 @@ const Section = ({children, title}) => {
         style={[
           styles.titleText,
           {
-            color: Colors.white,
-          },
+            color: Colors.white,},
         ]}>
         {title}
       </Text>
@@ -40,47 +39,48 @@ const Section = ({children, title}) => {
   );
 };
 
-/**
- * 
- * @param {*} param0 
- * @returns 
- */
-const TextSection = ({text}) => {
-  return (
-  <SafeAreaView>
-    <View style={styles.sectionContainer}>
-      <Text style={styles.textSection}>
-      {text}
-      </Text>
-    </View>
-  </SafeAreaView>
-  )}
+//const Answers = ({buttons})
 
   /**
-   * Need to write something to generate however many buttons are needed for a question, and
-   * get a video displaying next
+   * Need to write something to generate however many buttons are needed for a question
+   * Has a video displaying now, I need to detect screen orientation and reorient the video/app for it
    * @returns 
    */
-const App = () => {
+class App extends Component {
+  render(){
+    const testVideo = require('./Test.mp4');
   return (
-    <SafeAreaView>
-            <Section title="Training Video">
-              <Text>In this video something happens</Text>
-            </Section>
-            <Image style={styles.imageAlign}
-        source={{uri: "https://developer-blogs.nvidia.com/wp-content/uploads/2016/07/cute.jpg"}}
-        />
-        <SafeAreaView title="Answers" style={{justifyContent: "space-evenly"}}> 
-          <Text style={styles.titleText}>Answers</Text>
+      <View style={{flex: 2, justifyContent:"flex-start"}}>
+        <Section title="Training Video">
+          <Text>In this video something happens</Text>
+        </Section>
 
-          <View style={styles.buttonStyle}>
-            <Button title="Cat"/>
-            <Button title="Bunny"/>
-            <Button title="Snake"/>
-          </View>
-        </SafeAreaView>
-    </SafeAreaView>
+        <Video source={testVideo}
+          ref={(ref) => {this.player = ref}}
+          onBuffer={this.onBuffer}
+          onError={this.videoError}
+          resizeMode={'contain'}
+          paused={true}
+
+          style={styles.videoAlign}
+          controls={true}
+        /> 
+
+          <SafeAreaView title="Answers" style={{flex: 1, justifyContent: "space-evenly"}}> 
+            <Text style={styles.titleText}>Answers</Text>
+
+            <View style={styles.buttonStyle}>
+              <Button title="Cat"
+              onPress={() => {alert('Incorrect')}}/>
+              <Button title="Bunny"
+              onPress={() => {alert('Incorrect')}}/>
+              <Button title="Snake"
+              onPress={() => {alert('Correct')}}/>
+            </View>
+          </SafeAreaView>
+      </View>
   );
+}
 }
 
 
@@ -107,15 +107,15 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
 
-  imageAlign: {
-    height: 300,
-    width: 300,
-    alignSelf: "center",
+  videoAlign: {
+    position: 'relative',
+    flex: 1,
   },
 
   buttonStyle: {
     alignSelf: "center",
-    justifyContent: "space-evenly"
+    justifyContent: "space-around",
+    flex: 0.8,
   },
 });
 
